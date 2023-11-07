@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Timer from "@/components/Timer.vue";
 
 </script>
 
@@ -6,9 +7,7 @@
   <main>
     <div class="header">
       <button class="cancel"><img src="/icons/cancel.svg" alt="">Отмена</button>
-      <div class="timer">
-        <p class="title_timer">4:37</p>
-      </div>
+      <Timer />
     </div>
     <div class="example">
       <p>13 * <input class="hidden" type="text"> * <input class="hidden" type="text"></p>
@@ -16,23 +15,15 @@
     </div>
     <div class="actions">
       <div class="actions_number">
-        <button class="number">1</button>
-        <button class="number">2</button>
-        <button class="number">3</button>
-        <button class="number">4</button>
-        <button class="number">5</button>
-        <button class="number">6</button>
-        <button class="number">7</button>
-        <button class="number">8</button>
-        <button class="number">9</button>
+        <button class="number" v-for="num of 9" >{{ num }}</button>
         <div></div>
         <button class="number">0</button>
       </div>
       <div class="actions_users">
-        <button class="action"><img src="/icons/arrow_back.svg" alt=""></button>
-        <button class="action"><img src="/icons/arrow_forward.svg" alt=""></button>
-        <button class="action"> ?</button>
-        <button class="action"> =</button>
+        <button class="action"> <img src="/icons/arrow_back.svg" alt=""> </button>
+        <button class="action"> <img src="/icons/arrow_forward.svg" alt=""> </button>
+        <button class="action"> ? </button>
+        <button class="action"> = </button>
       </div>
     </div>
   </main>
@@ -67,22 +58,6 @@ main {
   & img {
     margin-right: 5px;
   }
-}
-
-.title_timer {
-  margin: 0;
-}
-
-.timer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 60px;
-  height: 30px;
-  border: 2px solid #5395e7;
-  border-right: 20px solid #5395e7;
-  background-color: #f5f5f5;
-  padding-right: 10px;
 }
 
 .example {

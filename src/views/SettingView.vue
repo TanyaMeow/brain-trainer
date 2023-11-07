@@ -1,9 +1,30 @@
 <script setup lang="ts">
+import GameSettings from "@/components/GameSettings.vue";
+import {provide} from "vue";
+import {SettingsStore} from "@/stores/settings";
 
-import {ref} from "vue";
+class Setting {
+  duration: number;
+  complex: number;
+  summing: boolean;
+  difference: boolean;
+  multi: boolean;
+  division: boolean;
+  expo: boolean;
 
-const dur = ref(0);
-const com = ref(0);
+  constructor(duration, complex, summing, difference, multi, division, expo) {
+    this.duration = duration;
+    this.complex = complex;
+    this.summing = summing;
+    this.difference = difference;
+    this.multi = multi;
+    this.division = division;
+    this.expo = expo;
+  }
+}
+
+const setting = new Setting();
+provide('set', setting);
 
 </script>
 
@@ -15,40 +36,15 @@ const com = ref(0);
       <p>Ваш последний результат - решено 10 из 25.</p>
       <p>Общая точность 80%.</p>
     </div>
-    <div class="setting_game">
-      <h1 class="setting_title">Настройки</h1>
-      <div class="setting_duration">
-        <input type="range" min="1" max="15" v-model="dur">
-        <p class="duration">Длительность {{ dur }}</p>
-      </div>
-      <div class="setting_complexity">
-        <input type="range" min="1" max="10" v-model="com">
-        <p class="complexity">Сложность {{ com }}</p>
-      </div>
-      <div class="math_operation">
-        <div><input type="checkbox">Суммирование</div>
-        <div><input type="checkbox">Разность</div>
-        <div><input type="checkbox">Умножение</div>
-        <div><input type="checkbox">Деление</div>
-        <div><input type="checkbox">Возведение в степень</div>
-      </div>
-    </div>
-    <button class="go">Начать!</button>
+    <GameSettings />
+    <button class="go" @click="SettingsStore.setSettings(setting)">Начать!</button>
   </div>
 </template>
 
 <style scoped>
 
-input {
-  margin-right: 15px;
-}
-
 .setting {
   width: 400px;
-}
-
-.setting_title {
-  font-size: 22px;
 }
 
 .result {
@@ -70,14 +66,8 @@ input {
   margin-left: auto;
 }
 
-.complexity,
-.duration {
-  margin-top: 0;
-}
-
 @media (min-width: 1024px) {
   .setting {
-    min-height: 100vh;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
