@@ -2,6 +2,7 @@
 import GameSettings from "@/components/GameSettings.vue";
 import {provide} from "vue";
 import {SettingsStore} from "@/stores/settings";
+import router from "@/router";
 
 class Setting {
   duration: number;
@@ -26,6 +27,11 @@ class Setting {
 const setting = new Setting();
 provide('set', setting);
 
+function go() {
+  SettingsStore.setSettings(setting);
+  router.push({path: '/game'});
+}
+
 </script>
 
 <template>
@@ -37,7 +43,7 @@ provide('set', setting);
       <p>Общая точность 80%.</p>
     </div>
     <GameSettings />
-    <button class="go" @click="SettingsStore.setSettings(setting)">Начать!</button>
+    <button class="go" @click="go">Начать!</button>
   </div>
 </template>
 

@@ -9,7 +9,10 @@ interface SettingInterface {
 }
 
 export class SettingsStore {
-    public setting: SettingInterface | {} = {};
+    private static setting: SettingInterface | {} = {};
+    static getSettings() {
+        return this.setting;
+    }
 
     static setSettings (settings: SettingInterface) {
         this.setting = settings;
