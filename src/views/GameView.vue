@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import Timer from "@/components/Timer.vue";
+import {ref} from "vue";
+import {game} from "@/stores/Game";
+
+const number = ref('');
 
 </script>
 
@@ -7,23 +11,23 @@ import Timer from "@/components/Timer.vue";
   <main>
     <div class="header">
       <button class="cancel"><img src="/icons/cancel.svg" alt="">Отмена</button>
-      <Timer />
+      <Timer/>
     </div>
     <div class="example">
-      <p>13 * <input class="hidden" type="text"> * <input class="hidden" type="text"></p>
-      <p class="correct_result">= 84240?</p>
+      <p>2 * <input class="hidden" type="text" v-model="number"></p>
+      <p class="correct_result">= 4?</p>
     </div>
     <div class="actions">
       <div class="actions_number">
-        <button class="number" v-for="num of 9" >{{ num }}</button>
+        <button class="number" v-for="num of 9" @click="number += num">{{ num }}</button>
         <div></div>
-        <button class="number">0</button>
+        <button class="number" @click="number += 0">0</button>
       </div>
       <div class="actions_users">
-        <button class="action"> <img src="/icons/arrow_back.svg" alt=""> </button>
-        <button class="action"> <img src="/icons/arrow_forward.svg" alt=""> </button>
-        <button class="action"> ? </button>
-        <button class="action"> = </button>
+        <button class="action"><img src="/icons/arrow_back.svg" alt=""></button>
+        <button class="action"><img src="/icons/arrow_forward.svg" alt=""></button>
+        <button class="action"> ?</button>
+        <button class="action"> =</button>
       </div>
     </div>
   </main>

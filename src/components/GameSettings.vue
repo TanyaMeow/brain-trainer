@@ -7,7 +7,7 @@ let setting = inject('settingState');
 
 <template>
   <div class="setting_game">
-    <h1 class="setting_title" @click="console.log(setting)">Настройки</h1>
+    <h1 class="setting_title">Настройки</h1>
     <div class="setting_duration">
       <input type="range" min="1" max="15" v-model="setting.duration">
       <p class="duration">Длительность {{ setting.duration }}</p>

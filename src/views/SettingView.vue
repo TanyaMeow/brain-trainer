@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import GameSettings from "@/components/GameSettings.vue";
 import {provide, ref} from "vue";
-import {Setting, SettingInterface, SettingsStore} from "@/stores/Settings";
+import {Setting, SettingInterface, SettingsStore} from "@/stores/GameSettings";
 import router from "@/router";
+import {Game} from "@/stores/Game";
 
 const settingState = ref<SettingInterface>({
   duration: 0,
@@ -18,6 +19,7 @@ provide('settingState', settingState.value);
 
 function go() {
   SettingsStore.setSettings(new Setting(settingState.value));
+  new Game(SettingsStore.getSettings()).getTask();
   router.push({path: '/game'});
 }
 
@@ -59,6 +61,10 @@ function go() {
   border: 1px solid #9f9f9f;
   box-shadow: 0 2px 2px 0 rgba(148, 148, 148, 0.53);
   margin-left: auto;
+}
+
+.go:hover {
+  cursor: pointer;
 }
 
 @media (min-width: 1024px) {
