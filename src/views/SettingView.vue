@@ -1,34 +1,23 @@
 <script setup lang="ts">
 import GameSettings from "@/components/GameSettings.vue";
-import {provide} from "vue";
-import {SettingsStore} from "@/stores/settings";
+import {provide, ref} from "vue";
+import {Setting, SettingInterface, SettingsStore} from "@/stores/Settings";
 import router from "@/router";
 
-class Setting {
-  duration: number;
-  complex: number;
-  summing: boolean;
-  difference: boolean;
-  multi: boolean;
-  division: boolean;
-  expo: boolean;
+const settingState = ref<SettingInterface>({
+  duration: 0,
+  complex: 0,
+  summing: false,
+  difference: false,
+  multi: false,
+  division: false,
+  expo: false
+});
 
-  constructor(duration, complex, summing, difference, multi, division, expo) {
-    this.duration = duration;
-    this.complex = complex;
-    this.summing = summing;
-    this.difference = difference;
-    this.multi = multi;
-    this.division = division;
-    this.expo = expo;
-  }
-}
-
-const setting = new Setting();
-provide('set', setting);
+provide('settingState', settingState.value);
 
 function go() {
-  SettingsStore.setSettings(setting);
+  SettingsStore.setSettings(new Setting(settingState.value));
   router.push({path: '/game'});
 }
 

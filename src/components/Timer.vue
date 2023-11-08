@@ -1,9 +1,11 @@
 <script setup lang="ts">
 
-import {SettingsStore} from "@/stores/settings";
+import {SettingsStore} from "@/stores/Settings";
 import {ref} from "vue";
 
-const timer = SettingsStore.getSettings().duration;
+const setting = SettingsStore.getSettings();
+
+const timer = setting.duration;
 let sec = ref(0);
 let min = ref(0);
 
@@ -25,7 +27,7 @@ const countdown = setInterval(function () {
 </script>
 
 <template>
-  <div class="timer">
+  <div class="timer" @click="console.log(setting)">
     <p class="title_timer">{{ min }}:{{sec}}</p>
   </div>
 </template>

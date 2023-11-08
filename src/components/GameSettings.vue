@@ -1,15 +1,7 @@
 <script setup lang="ts">
-import {inject, ref} from "vue";
+import {inject} from "vue";
 
-const dur = ref(0);
-const com = ref(0);
-const sum = ref(false);
-const dif = ref(false);
-const mul = ref(false);
-const div = ref(false);
-const expo = ref(false);
-
-let setting = inject('set');
+let setting = inject('settingState');
 
 </script>
 
@@ -17,29 +9,24 @@ let setting = inject('set');
   <div class="setting_game">
     <h1 class="setting_title" @click="console.log(setting)">Настройки</h1>
     <div class="setting_duration">
-      <input type="range" min="1" max="15" v-model="dur" @change="setting.duration = dur">
-      <p class="duration">Длительность {{ dur }}</p>
+      <input type="range" min="1" max="15" v-model="setting.duration">
+      <p class="duration">Длительность {{ setting.duration }}</p>
     </div>
     <div class="setting_complexity">
-      <input type="range" min="1" max="10" v-model="com" @change="setting.complex = com">
-      <p class="complexity">Сложность {{ com }}</p>
+      <input type="range" min="1" max="10" v-model="setting.complex">
+      <p class="complexity">Сложность {{ setting.complex }}</p>
     </div>
     <div class="math_operation">
       <div><input type="checkbox"
-                  v-model="sum"
-                  @change="setting.summing = sum">Суммирование</div>
+                  v-model="setting.summing">Суммирование</div>
       <div><input type="checkbox"
-                  v-model="dif"
-                  @change="setting.difference = dif">Разность</div>
+                  v-model="setting.difference">Разность</div>
       <div><input type="checkbox"
-                  v-model="mul"
-                  @change="setting.multi = mul">Умножение</div>
+                  v-model="setting.multi">Умножение</div>
       <div><input type="checkbox"
-                  v-model="div"
-                  @change="setting.division = div">Деление</div>
+                  v-model="setting.division">Деление</div>
       <div><input type="checkbox"
-                  v-model="expo"
-                  @change="setting.expo = expo">Возведение в степень</div>
+                  v-model="setting.expo">Возведение в степень</div>
     </div>
   </div>
 </template>
