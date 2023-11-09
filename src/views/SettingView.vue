@@ -19,7 +19,8 @@ provide('settingState', settingState.value);
 
 function go() {
   SettingsStore.setSettings(new Setting(settingState.value));
-  new Game(SettingsStore.getSettings()).getTask();
+  Game.startGame(SettingsStore.getSettings());
+  Game.currentGame.getTask();
   router.push({path: '/game'});
 }
 

@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import Timer from "@/components/Timer.vue";
 import {ref} from "vue";
-import {game} from "@/stores/Game";
+import {Game} from "@/stores/Game";
 
 const number = ref('');
+let tasks: string = Game.currentGame.formattedTask.task;
+let taskNew = '';
+
+function setTask(number) {
+  taskNew = tasks.split(' ').map((task) => {
+    if (task === '_') {
+      task = number;
+      return task;
+    }
+    return task;
+  }).join(' ');
+}
 
 </script>
 
@@ -14,20 +26,29 @@ const number = ref('');
       <Timer/>
     </div>
     <div class="example">
-      <p>2 * <input class="hidden" type="text" v-model="number"></p>
-      <p class="correct_result">= 4?</p>
+      <p class="container_task" v-for="task of tasks" >
+        <p v-if="task === '_'">
+          <input type="text" class="hidden" v-model="number">
+        </p>
+        <p v-else>
+          {{task}}
+        </p>
+      </p>
+    </div>
+    <div class="result">
+      <p class="correct_result">= {{ tasks.result }} ?</p>
     </div>
     <div class="actions">
       <div class="actions_number">
-        <button class="number" v-for="num of 9" @click="number += num">{{ num }}</button>
+        <button class="number" v-for="num of 9" @click="number += num; setTask(number)">{{ num }}</button>
         <div></div>
-        <button class="number" @click="number += 0">0</button>
+        <button class="number" @click="number += 0; setTask(number)">0</button>
       </div>
       <div class="actions_users">
         <button class="action"><img src="/icons/arrow_back.svg" alt=""></button>
         <button class="action"><img src="/icons/arrow_forward.svg" alt=""></button>
         <button class="action"> ?</button>
-        <button class="action"> =</button>
+        <button class="action" @click="console.log(taskNew)"> =</button>
       </div>
     </div>
   </main>
@@ -68,8 +89,13 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: row;
   margin-top: 20px;
+}
+
+.result {
+  display: flex;
+  justify-content: center;
 }
 
 .correct_result {

@@ -1,7 +1,6 @@
 import {GameEngine} from "@/stores/GameEngine";
 import {GameHistory} from "@/stores/GameHistory";
 import type {SettingInterface} from "@/stores/GameSettings";
-import {SettingsStore} from "@/stores/GameSettings";
 
 interface TaskInterface {
     task: string,
@@ -10,10 +9,15 @@ interface TaskInterface {
 }
 
 export class Game {
-    task: TaskInterface = {};
-    settings = {};
+    static currentGame;
     private engine = {};
     private history = new GameHistory();
+    formattedTask: TaskInterface | {} = {};
+    settings = {};
+
+    static startGame(settings) {
+        this.currentGame = new Game(settings);
+    }
 
     constructor(settings: SettingInterface | {}) {
         this.engine = new GameEngine(settings)
@@ -21,15 +25,14 @@ export class Game {
     }
 
     getTask() {
-        this.task = this.engine.createTask();
-        return this.engine.createTask();
+        this.formattedTask = this.engine.createTask();
     };
 
     getAccuracy() {
     };
 
     checkAnswer(solution) {
-        this.engine.checkAnswer(solution, this.task);
+        this.engine.checkAnswer(solution);
     };
 
     startTimer() {
@@ -53,5 +56,3 @@ export class Game {
         }, 1000);
     }
 }
-
-export const game = new Game(SettingsStore.getSettings());

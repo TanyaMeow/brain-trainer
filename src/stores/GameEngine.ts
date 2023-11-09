@@ -1,4 +1,5 @@
 import type {SettingInterface} from "@/stores/GameSettings";
+import {all, create} from "mathjs";
 
 interface TaskInterface {
     task: string,
@@ -7,6 +8,7 @@ interface TaskInterface {
 }
 
 export class GameEngine {
+    private currentTask: TaskInterface | {} = {};
     tasks: TaskInterface[] = [
         {
             task: '2 - 2 + 2',
@@ -22,8 +24,9 @@ export class GameEngine {
             task: '2 / 2 * 4',
             result: 4,
             operation: ['/', '*']
-        }];
-    decide: TaskInterface[] = [];
+        }
+        ];
+    decidedTasks: TaskInterface[] = [];
     settings = {};
 
     constructor(settings: SettingInterface) {
@@ -49,7 +52,7 @@ export class GameEngine {
             operation.push('**');
         }
 
-        const unsuitableTasks = this.tasks.filter((task) => {
+        const necessaryTasks = this.tasks.filter((task) => {
             for (let operator of operation) {
                 if (task.operation.includes(operator)) {
                     return false;
@@ -58,18 +61,33 @@ export class GameEngine {
             return true;
         })
 
-        const random = Math.floor(Math.random() * unsuitableTasks.length)
-
-        return unsuitableTasks[random];
+        const random = Math.floor(Math.random() * necessaryTasks.length)
+        this.currentTask = necessaryTasks[random];
+        return this.setComplex();
     };
 
-    checkAnswer(solution: TaskInterface, task: TaskInterface) {
-        if (solution === task) {
-            this.decide.push(task);
+    setComplex() {
+        const operators = ['*', '+', '/', '-', '**'];
+        const task = this.currentTask.task.split(' ').map((oper) => {
+            if(!operators.includes(oper)) {
+                return '_';
+            }
+            return oper;
+        }).join(' ');
+
+        return {task: task, result: this.currentTask.result, operation: this.currentTask.operation};
+    }
+
+    checkAnswer(solution: TaskInterface) {
+        const math = create(all, {});
+        const answer = math.evaluate(solution);
+
+        if (answer === this.currentTask.result) {
+            this.decidedTasks.push(this.currentTask);
         }
     };
 
-    giveMeAChance(task: TaskInterface) {
-        return task;
+    giveMeAChance() {
+        return this.currentTask.task;
     };
 }
