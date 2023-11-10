@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import Timer from "@/components/Timer.vue";
-import {ref} from "vue";
+import {createSlots, ref} from "vue";
 import {Game} from "@/stores/Game";
 
-const number = ref('');
-let tasks: string = Game.currentGame.formattedTask.task;
-let taskNew = '';
+const game = Game.currentGame;
 
-function setTask(number) {
-  taskNew = tasks.split(' ').map((task) => {
-    if (task === '_') {
-      task = number;
-      return task;
-    }
-    return task;
-  }).join(' ');
+const formattedTask = game.formattedTask;
+const formatted = ref(formattedTask.task.split(' ').map((task) => {
+  if (task === '_') {
+    return {item: '', isInput: true}
+  }
+  return {item: task, isInput: false}
+}));
+
+const currentIndex = ref(0);
+
+function setCurrentIndex(index: number) {
+  currentIndex.value = index;
+}
+
+// function InputHidden(slotContent) {
+//   return `<input type="number" class="hidden"">`
+// }
+
+function setTask(digit) {
+  formatted.value[currentIndex.value].item += String(digit);
 }
 
 </script>
@@ -26,29 +36,29 @@ function setTask(number) {
       <Timer/>
     </div>
     <div class="example">
-      <p class="container_task" v-for="task of tasks" >
-        <p v-if="task === '_'">
-          <input type="text" class="hidden" v-model="number">
+      <p class="container_task" v-for="(task, index) of formatted" :key="index">
+        <p v-if="task.isInput">
+          <input type="number" class="hidden" :value="task.item" @focus="setCurrentIndex(index)" @input="task.item = $event.target.value">
         </p>
         <p v-else>
-          {{task}}
+          {{task.item}}
         </p>
       </p>
     </div>
     <div class="result">
-      <p class="correct_result">= {{ tasks.result }} ?</p>
+      <p class="correct_result">= {{ formattedTask.result }} ?</p>
     </div>
     <div class="actions">
       <div class="actions_number">
-        <button class="number" v-for="num of 9" @click="number += num; setTask(number)">{{ num }}</button>
+        <button class="number" v-for="num of 9" @click="setTask(num)">{{ num }}</button>
         <div></div>
-        <button class="number" @click="number += 0; setTask(number)">0</button>
+        <button class="number" @click="setTask(num)">0</button>
       </div>
       <div class="actions_users">
         <button class="action"><img src="/icons/arrow_back.svg" alt=""></button>
         <button class="action"><img src="/icons/arrow_forward.svg" alt=""></button>
         <button class="action"> ?</button>
-        <button class="action" @click="console.log(taskNew)"> =</button>
+        <button class="action" @click="console.log(formatted.map(item => item.item).join(' '))"> =</button>
       </div>
     </div>
   </main>
@@ -113,6 +123,12 @@ main {
   max-width: 30px;
   text-align: center;
   font-weight: 600;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 p {

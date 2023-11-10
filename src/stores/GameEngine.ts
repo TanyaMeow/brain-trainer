@@ -11,20 +11,55 @@ export class GameEngine {
     private currentTask: TaskInterface | {} = {};
     tasks: TaskInterface[] = [
         {
-            task: '2 - 2 + 2',
+            task: '8 + 2 - 5 * 2',
             result: 0,
-            operation: ['+', '-']
+            operation: ['+', '-', '*']
         },
         {
-            task: '2 / 2',
-            result: 0,
-            operation: ['/']
+            task: '40 / 5 + 2',
+            result: 10,
+            operation: ['/', '+']
         },
         {
-            task: '2 / 2 * 4',
-            result: 4,
+            task: '24 / 8 * 8',
+            result: 24,
             operation: ['/', '*']
-        }
+        },
+        {
+            task: '50 + 410',
+            result: 460,
+            operation: ['+']
+        },
+        {
+            task: '24 / 8 * 8',
+            result: 24,
+            operation: ['/', '*']
+        },
+        {
+            task: '8 * 8 * 8',
+            result: 128,
+            operation: ['*']
+        },
+        {
+            task: '5 ** 2',
+            result: 25,
+            operation: ['**']
+        },
+        {
+            task: '24 / 8 ** 2',
+            result: 9,
+            operation: ['/', '*']
+        },
+        {
+            task: '120 + 60 - 4 / 2',
+            result: 87,
+            operation: ['/', '+', '-']
+        },
+        {
+            task: '2 + 2',
+            result: 4,
+            operation: ['+']
+        },
         ];
     decidedTasks: TaskInterface[] = [];
     settings = {};
