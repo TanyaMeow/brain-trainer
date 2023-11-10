@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Timer from "@/components/Timer.vue";
-import {createSlots, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {Game} from "@/stores/Game";
 
 const game = Game.currentGame;
@@ -14,17 +14,31 @@ const formatted = ref(formattedTask.task.split(' ').map((task) => {
 }));
 
 const currentIndex = ref(0);
+const activeInput = ref(0);
+const inputs = ref([]);
+
+onMounted(() => {
+  inputs.value[activeInput.value].focus();
+})
 
 function setCurrentIndex(index: number) {
   currentIndex.value = index;
 }
 
-// function InputHidden(slotContent) {
-//   return `<input type="number" class="hidden"">`
-// }
-
 function setTask(digit) {
   formatted.value[currentIndex.value].item += String(digit);
+}
+
+function nextInput() {
+ if (activeInput.value > 0) {
+    activeInput.value -= 2;
+    console.log(activeInput.value)
+ } else if (activeInput.value > formatted.value.length - 1) {
+   activeInput.value += 2;
+   console.log(activeInput.value)
+ }
+
+ inputs.value[activeInput.value].focus();
 }
 
 </script>
@@ -32,14 +46,12 @@ function setTask(digit) {
 <template>
   <main>
     <div class="header">
-      <button class="cancel"><img src="/icons/cancel.svg" alt="">Отмена</button>
+     <RouterLink to="/"><button class="cancel" @click="game.timer.stopTimer"><img src="/icons/cancel.svg" alt="" >Отмена</button></RouterLink>
       <Timer/>
     </div>
     <div class="example">
       <p class="container_task" v-for="(task, index) of formatted" :key="index">
-        <p v-if="task.isInput">
-          <input type="number" class="hidden" :value="task.item" @focus="setCurrentIndex(index)" @input="task.item = $event.target.value">
-        </p>
+        <input :ref="el => inputs[index] = el" v-if="task.isInput" type="number" class="hidden" :value="task.item" @focus="setCurrentIndex(index)" @input="task.item = $event.target.value">
         <p v-else>
           {{task.item}}
         </p>
@@ -55,8 +67,8 @@ function setTask(digit) {
         <button class="number" @click="setTask(num)">0</button>
       </div>
       <div class="actions_users">
-        <button class="action"><img src="/icons/arrow_back.svg" alt=""></button>
-        <button class="action"><img src="/icons/arrow_forward.svg" alt=""></button>
+        <button class="action"><img src="/icons/arrow_back.svg" @click="nextInput" alt=""></button>
+        <button class="action"><img src="/icons/arrow_forward.svg" @click="nextInput" alt=""></button>
         <button class="action"> ?</button>
         <button class="action" @click="console.log(formatted.map(item => item.item).join(' '))"> =</button>
       </div>

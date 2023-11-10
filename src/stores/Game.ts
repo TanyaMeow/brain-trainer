@@ -1,6 +1,7 @@
 import {GameEngine} from "@/stores/GameEngine";
 import {GameHistory} from "@/stores/GameHistory";
 import type {SettingInterface} from "@/stores/GameSettings";
+import {Timer} from "@/stores/Timer";
 
 interface TaskInterface {
     task: string,
@@ -9,11 +10,12 @@ interface TaskInterface {
 }
 
 export class Game {
+    formattedTask: TaskInterface | {} = {};
+    settings = {};
     static currentGame;
     private engine = {};
     private history = new GameHistory();
-    formattedTask: TaskInterface | {} = {};
-    settings = {};
+    private timer = {};
 
     static startGame(settings) {
         this.currentGame = new Game(settings);
@@ -21,6 +23,7 @@ export class Game {
 
     constructor(settings: SettingInterface | {}) {
         this.engine = new GameEngine(settings)
+        this.timer = new Timer(settings.duration);
         this.settings = settings;
     }
 
@@ -34,25 +37,4 @@ export class Game {
     checkAnswer(solution) {
         this.engine.checkAnswer(solution);
     };
-
-    startTimer() {
-        const timer = settings.duration;
-        let sec = 0;
-        let min = 0;
-
-        const stopTime = new Date().getTime() + (timer * 60000);
-
-        const countdown = setInterval(function () {
-            const now = new Date().getTime();
-            const remain = stopTime - now;
-            min = Math.floor((remain % (1000 * 60 * 60)) / (1000 * 60));
-            sec = Math.floor((remain % (1000 * 60)) / 1000);
-
-            sec = sec < 10 ? "0" + sec : sec;
-
-            if (remain < 0) {
-                clearInterval(countdown);
-            }
-        }, 1000);
-    }
 }

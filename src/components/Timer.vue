@@ -1,12 +1,16 @@
 <script setup lang="ts">
 
-// {{ min }}:{{ sec }}
+import {ref} from "vue";
+import {Game} from "@/stores/Game";
+
+const minute = ref(Game.currentGame.timer.minute);
+const second = ref(Game.currentGame.timer.second);
 
 </script>
 
 <template>
   <div class="timer">
-    <p class="title_timer"></p>
+    <p class="title_timer">{{ minute }} : {{ second }}</p>
   </div>
 </template>
 
