@@ -1,16 +1,5 @@
 import type {SettingInterface} from "@/interface/SettingInterface";
 
-export class SettingsStore {
-    private static setting: SettingInterface | {} = {};
-    static getSettings() {
-        return this.setting;
-    }
-
-    static setSettings (settings: SettingInterface) {
-        this.setting = settings;
-    }
-}
-
 export class Setting implements SettingInterface{
     duration: number;
     complex: number;

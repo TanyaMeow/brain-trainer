@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import GameSettings from "@/components/GameSettings.vue";
 import {provide, ref} from "vue";
-import {Setting, SettingInterface, SettingsStore} from "@/stores/GameSettings";
+import {Setting, SettingInterface, GameSetting} from "@/core/GameSettings";
 import router from "@/router";
-import {Game} from "@/stores/Game";
+import {Game} from "@/core/Game";
 
 const settingState = ref<SettingInterface>({
   duration: 0,
@@ -15,12 +15,20 @@ const settingState = ref<SettingInterface>({
   expo: false
 });
 
+if (localStorage.getItem('settings')) {
+  settingState.value = JSON.parse(localStorage.getItem('settings'));
+}
+
 provide('settingState', settingState.value);
 
-function go() {
-  SettingsStore.setSettings(new Setting(settingState.value));
-  Game.startGame(SettingsStore.getSettings());
+function startGame() {
+  const setting = new Setting(settingState.value);
+  localStorage.setItem('settings', JSON.stringify(setting));
+  Game.startGame(setting);
+
+  Game.currentGame.getDayNow();
   Game.currentGame.getTask();
+
   router.push({path: '/game'});
 }
 
@@ -35,7 +43,7 @@ function go() {
       <p>Общая точность 80%.</p>
     </div>
     <GameSettings />
-    <button class="go" @click="go">Начать!</button>
+    <button class="go" @click="startGame">Начать!</button>
   </div>
 </template>
 
