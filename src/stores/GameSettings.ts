@@ -1,12 +1,4 @@
-export interface SettingInterface {
-    duration: number;
-    complex: number;
-    summing: boolean;
-    difference: boolean;
-    multi: boolean;
-    division: boolean;
-    expo: boolean;
-}
+import type {SettingInterface} from "@/interface/SettingInterface";
 
 export class SettingsStore {
     private static setting: SettingInterface | {} = {};

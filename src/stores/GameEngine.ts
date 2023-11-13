@@ -1,6 +1,6 @@
-import type {SettingInterface} from "@/stores/GameSettings";
 import {all, create} from "mathjs";
 import type {TaskInterface} from "@/interface/TaskInterface";
+import type {SettingInterface} from "@/interface/SettingInterface";
 
 enum Operation {
     SUMMING = '+',

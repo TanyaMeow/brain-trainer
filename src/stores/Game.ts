@@ -1,12 +1,12 @@
 import {GameEngine} from "@/stores/GameEngine";
 import {GameHistory} from "@/stores/GameHistory";
-import type {SettingInterface} from "@/stores/GameSettings";
 import {Timer} from "@/stores/Timer";
 import type {TaskInterface} from "@/interface/TaskInterface";
+import type {SettingInterface} from "@/interface/SettingInterface";
 
 export class Game {
     static currentGame;
-    private settings = {};
+    private settings: SettingInterface | {} = {};
     private engine = {};
     private history = new GameHistory();
     private timer = {};
@@ -38,7 +38,7 @@ export class Game {
         },
         {
             task: '8 * 8 * 8',
-            result: 128,
+            result: 512,
             operation: ['*']
         },
         {
@@ -53,7 +53,7 @@ export class Game {
         },
         {
             task: '120 + 60 - 4 / 2',
-            result: 87,
+            result: 178,
             operation: ['/', '+', '-']
         },
         {
@@ -69,7 +69,7 @@ export class Game {
     ];
     decidedTasks: TaskInterface[] = [];
     formattedTask: TaskInterface | {} = {};
-    static startGame(settings) {
+    static startGame(settings: SettingInterface) {
         this.currentGame = new Game(settings);
     }
 
