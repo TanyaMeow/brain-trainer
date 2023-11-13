@@ -1,10 +1,17 @@
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {Game} from "@/stores/Game";
 
-const minute = ref(Game.currentGame.timer.minute);
-const second = ref(Game.currentGame.timer.second);
+const minute = ref(0);
+const second = ref(0);
+
+onMounted(() => {
+  setInterval(() => {
+    minute.value = Game.currentGame.timer.minute;
+    second.value = Game.currentGame.timer.second;
+  }, 1000)
+})
 
 </script>
 

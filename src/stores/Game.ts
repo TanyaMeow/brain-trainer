@@ -2,21 +2,73 @@ import {GameEngine} from "@/stores/GameEngine";
 import {GameHistory} from "@/stores/GameHistory";
 import type {SettingInterface} from "@/stores/GameSettings";
 import {Timer} from "@/stores/Timer";
-
-interface TaskInterface {
-    task: string,
-    result: number,
-    operation: string
-}
+import type {TaskInterface} from "@/interface/TaskInterface";
 
 export class Game {
-    formattedTask: TaskInterface | {} = {};
-    settings = {};
     static currentGame;
+    private settings = {};
     private engine = {};
     private history = new GameHistory();
     private timer = {};
-
+    tasks: TaskInterface[] = [
+        {
+            task: '8 + 2 - 5 * 2',
+            result: 0,
+            operation: ['+', '-', '*']
+        },
+        {
+            task: '40 / 5 + 2',
+            result: 10,
+            operation: ['/', '+']
+        },
+        {
+            task: '8 * 8',
+            result: 64,
+            operation: ['*']
+        },
+        {
+            task: '50 + 410',
+            result: 460,
+            operation: ['+']
+        },
+        {
+            task: '24 / 8 * 8',
+            result: 24,
+            operation: ['/', '*']
+        },
+        {
+            task: '8 * 8 * 8',
+            result: 128,
+            operation: ['*']
+        },
+        {
+            task: '5 ** 2',
+            result: 25,
+            operation: ['**']
+        },
+        {
+            task: '36 / 2 ** 2',
+            result: 9,
+            operation: ['/', '**']
+        },
+        {
+            task: '120 + 60 - 4 / 2',
+            result: 87,
+            operation: ['/', '+', '-']
+        },
+        {
+            task: '2 + 2',
+            result: 4,
+            operation: ['+']
+        },
+        {
+            task: '5 - 4',
+            result: 1,
+            operation: ['-']
+        }
+    ];
+    decidedTasks: TaskInterface[] = [];
+    formattedTask: TaskInterface | {} = {};
     static startGame(settings) {
         this.currentGame = new Game(settings);
     }
@@ -28,13 +80,17 @@ export class Game {
     }
 
     getTask() {
-        this.formattedTask = this.engine.createTask();
+        this.formattedTask = this.engine.createTask(this.tasks);
     };
+
+    correctAnswer() {
+        return this.engine.currentTask;
+    }
 
     getAccuracy() {
     };
 
-    checkAnswer(solution) {
-        this.engine.checkAnswer(solution);
+    checkAnswer(solution: string) {
+        return this.engine.checkAnswer(solution, this.decidedTasks);
     };
 }

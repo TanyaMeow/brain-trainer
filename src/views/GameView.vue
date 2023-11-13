@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import Timer from "@/components/Timer.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, provide, ref} from "vue";
 import {Game} from "@/stores/Game";
+import Popup from "@/components/Popup.vue";
+import {corr} from "mathjs";
 
 const game = Game.currentGame;
 
@@ -16,6 +18,8 @@ const formatted = ref(formattedTask.task.split(' ').map((task) => {
 const currentIndex = ref(0);
 const activeInput = ref(0);
 const inputs = ref([]);
+const open = ref(false);
+const correct = ref(false);
 
 onMounted(() => {
   inputs.value[activeInput.value].focus();
@@ -41,10 +45,14 @@ function nextInput() {
  inputs.value[activeInput.value].focus();
 }
 
+provide('open', open);
+provide('correct', correct);
+
 </script>
 
 <template>
   <main>
+    <Popup />
     <div class="header">
      <RouterLink to="/"><button class="cancel" @click="game.timer.stopTimer"><img src="/icons/cancel.svg" alt="" >Отмена</button></RouterLink>
       <Timer/>
@@ -64,13 +72,13 @@ function nextInput() {
       <div class="actions_number">
         <button class="number" v-for="num of 9" @click="setTask(num)">{{ num }}</button>
         <div></div>
-        <button class="number" @click="setTask(num)">0</button>
+        <button class="number" @click="setTask(0)">0</button>
       </div>
       <div class="actions_users">
         <button class="action"><img src="/icons/arrow_back.svg" @click="nextInput" alt=""></button>
         <button class="action"><img src="/icons/arrow_forward.svg" @click="nextInput" alt=""></button>
-        <button class="action"> ?</button>
-        <button class="action" @click="console.log(formatted.map(item => item.item).join(' '))"> =</button>
+        <button class="action"> ? </button>
+        <button class="action" @click="correct = game.checkAnswer(formatted.map(item => item.item).join(' ')); open = true"> =</button>
       </div>
     </div>
   </main>

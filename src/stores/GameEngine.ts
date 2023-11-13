@@ -1,93 +1,43 @@
 import type {SettingInterface} from "@/stores/GameSettings";
 import {all, create} from "mathjs";
+import type {TaskInterface} from "@/interface/TaskInterface";
 
-interface TaskInterface {
-    task: string,
-    result: number,
-    operation: string[]
+enum Operation {
+    SUMMING = '+',
+    DIFFERENCE = '-',
+    MULTI = '*',
+    DIVISION = '/',
+    EXPO = '**'
 }
 
 export class GameEngine {
     private currentTask: TaskInterface | {} = {};
-    tasks: TaskInterface[] = [
-        {
-            task: '8 + 2 - 5 * 2',
-            result: 0,
-            operation: ['+', '-', '*']
-        },
-        {
-            task: '40 / 5 + 2',
-            result: 10,
-            operation: ['/', '+']
-        },
-        {
-            task: '24 / 8 * 8',
-            result: 24,
-            operation: ['/', '*']
-        },
-        {
-            task: '50 + 410',
-            result: 460,
-            operation: ['+']
-        },
-        {
-            task: '24 / 8 * 8',
-            result: 24,
-            operation: ['/', '*']
-        },
-        {
-            task: '8 * 8 * 8',
-            result: 128,
-            operation: ['*']
-        },
-        {
-            task: '5 ** 2',
-            result: 25,
-            operation: ['**']
-        },
-        {
-            task: '24 / 8 ** 2',
-            result: 9,
-            operation: ['/', '*']
-        },
-        {
-            task: '120 + 60 - 4 / 2',
-            result: 87,
-            operation: ['/', '+', '-']
-        },
-        {
-            task: '2 + 2',
-            result: 4,
-            operation: ['+']
-        },
-        ];
-    decidedTasks: TaskInterface[] = [];
     settings = {};
 
     constructor(settings: SettingInterface) {
         this.settings = settings;
     }
 
-    createTask() {
+    createTask(tasks) {
         const operation: string[] = [];
 
         if (!this.settings.summing) {
-            operation.push('+');
+            operation.push(Operation.SUMMING);
         }
         if (!this.settings.difference) {
-            operation.push('-');
+            operation.push(Operation.DIFFERENCE);
         }
         if (!this.settings.multi) {
-            operation.push('*');
+            operation.push(Operation.MULTI);
         }
         if (!this.settings.division) {
-            operation.push('/');
+            operation.push(Operation.DIVISION);
         }
         if (!this.settings.expo) {
-            operation.push('**');
+            operation.push(Operation.EXPO);
         }
 
-        const necessaryTasks = this.tasks.filter((task) => {
+        const necessaryTasks = tasks.filter((task) => {
             for (let operator of operation) {
                 if (task.operation.includes(operator)) {
                     return false;
@@ -102,7 +52,13 @@ export class GameEngine {
     };
 
     setComplex() {
-        const operators = ['*', '+', '/', '-', '**'];
+        const operators = [
+            Operation.SUMMING,
+            Operation.MULTI,
+            Operation.DIFFERENCE,
+            Operation.DIVISION,
+            Operation.EXPO
+        ];
         const task = this.currentTask.task.split(' ').map((oper) => {
             if(!operators.includes(oper)) {
                 return '_';
@@ -113,13 +69,17 @@ export class GameEngine {
         return {task: task, result: this.currentTask.result, operation: this.currentTask.operation};
     }
 
-    checkAnswer(solution: TaskInterface) {
+    checkAnswer(solution: string, decided) {
         const math = create(all, {});
+        solution = solution.replace(' ** ', '^');
         const answer = math.evaluate(solution);
 
         if (answer === this.currentTask.result) {
-            this.decidedTasks.push(this.currentTask);
+            decided.push(this.currentTask);
+            return true;
         }
+
+        return false;
     };
 
     giveMeAChance() {

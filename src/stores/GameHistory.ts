@@ -5,5 +5,6 @@ export class GameHistory {
 
     setDecideAnswer() {
         this.decide++;
+        console.log(this.decide)
     }
 }
