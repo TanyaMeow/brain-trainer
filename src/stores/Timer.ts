@@ -1,9 +1,8 @@
-import router from "@/router";
-
 export class Timer {
     minute: number = 0;
     second: number = 0;
     timer;
+    gameOver: boolean = false;
 
     constructor(time: number) {
         const stopTime = new Date().getTime() + (time * 60000)
@@ -16,12 +15,14 @@ export class Timer {
             this.second = this.second < 10 ? "0" + this.second : this.second;
 
             if (remain <= 0) {
-                this.stopTimer()
+                this.gameOver = true;
+                this.stopTimer();
             }
         }, 1000);
     }
 
     stopTimer() {
+        console.log('stop');
         clearInterval(this.timer);
     }
 }

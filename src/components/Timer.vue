@@ -2,6 +2,7 @@
 
 import {onMounted, ref} from "vue";
 import {Game} from "@/stores/Game";
+import router from "@/router";
 
 const minute = ref(0);
 const second = ref(0);
@@ -10,6 +11,10 @@ onMounted(() => {
   setInterval(() => {
     minute.value = Game.currentGame.timer.minute;
     second.value = Game.currentGame.timer.second;
+
+    if (Game.currentGame.timer.gameOver) {
+      router.push({path: '/'});
+    }
   }, 1000)
 })
 
