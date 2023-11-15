@@ -10,17 +10,16 @@ import {Game} from "@/core/Game";
 const allDays = (localStorage.getItem('days')) ? JSON.parse(localStorage.getItem('days')  || '{}') : {};
 const lastDay = JSON.parse(localStorage.getItem('lastDay')  || '[0, 0]');
 
-// FIXME исправь ошибку ts (DONE)
+// FIXME исправь ошибку ts
 const settingState = ref<SettingInterface>((localStorage.getItem('settings'))
-    // FIXME тут тип any (DONE)
+    // FIXME тут тип any
     ? JSON.parse(localStorage.getItem('settings') || String(Setting.initialState))
-    // FIXME вынеси дефолтные значения в static поле initialState класса GameSettings (DONE)
     : Setting.initialState);
 
-// FIXME daysCount (DONE)
-// FIXME Object.keys(allDays).length || 1 (DONE)
 const days = ref<number>(Object.keys(allDays).length || 1);
-// FIXME JSON.parse(localStorage.getItem('percent')) || 0 (DONE)
+// FIXME JSON.parse(localStorage.getItem('percent')) || 0
+//  JSON.parse(localStorage.getItem('percent')) вернет string, по этому ts не пропускает.
+//  Достань число из JSON.parse(localStorage.getItem('percent')), а если значения нет то 0
 const accuracy = ref<number>(JSON.parse(localStorage.getItem('percent') || '0') || 0);
 
 provide('settingState', settingState.value);
