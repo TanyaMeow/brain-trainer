@@ -5,7 +5,6 @@ import {provide, ref} from "vue";
 import {Setting, SettingInterface, GameSetting} from "@/core/GameSettings";
 import router from "@/router";
 import {Game} from "@/core/Game";
-import type {TaskInterface} from "@/interface/TaskInterface";
 
 const daysLocalStorage = JSON.parse(localStorage.getItem('days'));
 const day = JSON.parse(localStorage.getItem('day'));

@@ -13,7 +13,8 @@ let correctResult = inject('correctResult');
     <div class="container_popup">
       <div class="popup">
         <div>
-          <p>Решение: {{ correctResult }}</p>
+          <p>Решение: </p>
+          <p>{{ correctResult }}</p>
         </div>
       </div>
       <img @click="openSolution = false" src="/icons/cancel.svg" alt="">

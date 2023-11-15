@@ -12,42 +12,58 @@ enum Operation {
 
 export class GameEngine {
     private currentTask: TaskInterface | {} = {};
+    private math = create(all, {});
     settings = {};
 
     constructor(settings: SettingInterface) {
         this.settings = settings;
     }
 
-    createTask(tasks) {
+    getRandomInt(min: number, max: number) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    createTask() {
         const operation: string[] = [];
 
-        if (!this.settings.summing) {
+        if (this.settings.summing) {
             operation.push(Operation.SUMMING);
         }
-        if (!this.settings.difference) {
+        if (this.settings.difference) {
             operation.push(Operation.DIFFERENCE);
         }
-        if (!this.settings.multi) {
+        if (this.settings.multi) {
             operation.push(Operation.MULTI);
         }
-        if (!this.settings.division) {
+        if (this.settings.division) {
             operation.push(Operation.DIVISION);
         }
-        if (!this.settings.expo) {
+        if (this.settings.expo) {
             operation.push(Operation.EXPO);
         }
 
-        const necessaryTasks = tasks.filter((task) => {
-            for (let operator of operation) {
-                if (task.operation.includes(operator)) {
-                    return false;
-                }
-            }
-            return true;
-        })
+        let task = '';
 
-        const random = Math.floor(Math.random() * necessaryTasks.length)
-        this.currentTask = necessaryTasks[random];
+        for (let i = 0; i < this.settings.complex; i++) {
+            const leftOperand = String(this.getRandomInt(1, 100));
+            const random = Math.floor(Math.random() * operation.length);
+            const operator = operation[random];
+
+            let expression = leftOperand + ' ' + operator + ' ';
+
+            if (i === this.settings.complex - 1) {
+                expression = leftOperand;
+            }
+
+            task += expression;
+        }
+
+        const result = Math.floor(this.math.evaluate(task));
+
+        this.currentTask = {task: task, result: result};
         return this.setComplex();
     };
 
@@ -63,16 +79,16 @@ export class GameEngine {
             if(!operators.includes(oper)) {
                 return '_';
             }
+
             return oper;
         }).join(' ');
 
-        return {task: task, result: this.currentTask.result, operation: this.currentTask.operation};
+        return {task: task, result: this.currentTask.result};
     }
 
     checkAnswer(solution: string) {
-        const math = create(all, {});
         solution = solution.replace(' ** ', '^');
-        const answer = math.evaluate(solution);
+        const answer = Math.floor(this.math.evaluate(solution));
 
         return answer === this.currentTask.result;
     };

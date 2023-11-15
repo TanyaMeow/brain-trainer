@@ -11,63 +11,6 @@ export class Game {
     private history = new GameHistory();
     private timer = {};
     formattedTask: TaskInterface | {} = {};
-    tasks: TaskInterface[] = [
-        {
-            task: '8 + 2 - 5 * 2',
-            result: 0,
-            operation: ['+', '-', '*']
-        },
-        {
-            task: '40 / 5 + 2',
-            result: 10,
-            operation: ['/', '+']
-        },
-        {
-            task: '8 * 8',
-            result: 64,
-            operation: ['*']
-        },
-        {
-            task: '50 + 410',
-            result: 460,
-            operation: ['+']
-        },
-        {
-            task: '24 / 8 * 8',
-            result: 24,
-            operation: ['/', '*']
-        },
-        {
-            task: '8 * 8 * 8',
-            result: 512,
-            operation: ['*']
-        },
-        {
-            task: '5 ** 2',
-            result: 25,
-            operation: ['**']
-        },
-        {
-            task: '36 / 2 ** 2',
-            result: 9,
-            operation: ['/', '**']
-        },
-        {
-            task: '120 + 60 - 4 / 2',
-            result: 178,
-            operation: ['/', '+', '-']
-        },
-        {
-            task: '2 + 2',
-            result: 4,
-            operation: ['+']
-        },
-        {
-            task: '5 - 4',
-            result: 1,
-            operation: ['-']
-        }
-    ];
     decidedSuccessfullyTasks: number = 0;
     decidedTasks: number = 0;
     presentDay: string = '';
@@ -83,7 +26,7 @@ export class Game {
     }
 
     getTask() {
-        this.formattedTask = this.engine.createTask(this.tasks);
+        this.formattedTask = this.engine.createTask();
         return this.formattedTask;
     };
 

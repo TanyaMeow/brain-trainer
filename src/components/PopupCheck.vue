@@ -36,7 +36,8 @@ function nextTask() {
         </div>
         <div v-else>
           <p>Задача не решена.</p>
-          <p>Верное решение: {{ correctResult }}</p>
+          <p>Верное решение: </p>
+          <p>{{ correctResult }}</p>
         </div>
       </div>
       <img @click="nextTask(); openCheck = false" src="/icons/cancel.svg" alt="">

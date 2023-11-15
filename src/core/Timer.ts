@@ -1,6 +1,6 @@
 export class Timer {
     minute: number = 0;
-    second: number = 0;
+    second: string | number = 0;
     timer;
     gameOver: boolean = false;
 
