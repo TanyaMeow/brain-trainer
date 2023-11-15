@@ -1,29 +1,22 @@
 <script setup lang="ts">
 
-import {inject} from "vue";
-import {Game} from "@/stores/Game";
+import {computed, inject, ref} from "vue";
+import {Game} from "@/core/Game";
 
-const game = Game.currentGame;
-const correctTask = game.correctAnswer().task;
-
-const open = inject('open');
-const correct = inject('correct');
+const openSolution = inject('openSolution');
+let correctResult = inject('correctResult');
 
 </script>
 
 <template>
-  <div class="block_popup" v-show="open">
+  <div class="block_popup" v-show="openSolution">
     <div class="container_popup">
       <div class="popup">
-        <div v-if="correct">
-          <p class="title">Верно!</p>
-        </div>
-        <div v-else>
-          <p>Задача не решена.</p>
-          <p>Верное решение: {{ correctTask }}</p>
+        <div>
+          <p>Решение: {{ correctResult }}</p>
         </div>
       </div>
-      <img @click="open = false" src="/icons/cancel.svg" alt="">
+      <img @click="openSolution = false" src="/icons/cancel.svg" alt="">
     </div>
   </div>
 </template>

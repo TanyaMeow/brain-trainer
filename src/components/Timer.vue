@@ -1,18 +1,23 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue";
-import {Game} from "@/stores/Game";
+import {Game} from "@/core/Game";
 import router from "@/router";
+
+const game = Game.currentGame;
 
 const minute = ref(0);
 const second = ref(0);
 
 onMounted(() => {
-  setInterval(() => {
-    minute.value = Game.currentGame.timer.minute;
-    second.value = Game.currentGame.timer.second;
+  const timer = setInterval(() => {
+    minute.value = game.timer.minute;
+    second.value = game.timer.second;
 
-    if (Game.currentGame.timer.gameOver) {
+    if (game.timer.gameOver) {
+      game.timer.stopTimer();
+      clearInterval(timer);
+      game.updateHistory();
       router.push({path: '/'});
     }
   }, 1000)

@@ -22,7 +22,6 @@ export class Timer {
     }
 
     stopTimer() {
-        console.log('stop');
         clearInterval(this.timer);
     }
 }

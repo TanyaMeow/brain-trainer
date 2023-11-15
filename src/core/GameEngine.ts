@@ -69,17 +69,12 @@ export class GameEngine {
         return {task: task, result: this.currentTask.result, operation: this.currentTask.operation};
     }
 
-    checkAnswer(solution: string, decided) {
+    checkAnswer(solution: string) {
         const math = create(all, {});
         solution = solution.replace(' ** ', '^');
         const answer = math.evaluate(solution);
 
-        if (answer === this.currentTask.result) {
-            decided.push(this.currentTask);
-            return true;
-        }
-
-        return false;
+        return answer === this.currentTask.result;
     };
 
     giveMeAChance() {

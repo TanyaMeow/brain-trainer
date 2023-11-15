@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import Timer from "@/components/Timer.vue";
-import {onMounted, provide, ref} from "vue";
-import {Game} from "@/stores/Game";
-import Popup from "@/components/Popup.vue";
-import {corr} from "mathjs";
+import {computed, onMounted, provide, ref} from "vue";
+import {Game} from "@/core/Game";
+import PopupCheck from "@/components/PopupCheck.vue";
+import PopupSolution from "@/components/PopupSolution.vue";
 
 const game = Game.currentGame;
 
-const formattedTask = game.formattedTask;
-const formatted = ref(formattedTask.task.split(' ').map((task) => {
+const formattedTask = ref(game.formattedTask);
+const formatted = ref(formattedTask.value.task.split(' ').map((task) => {
   if (task === '_') {
     return {item: '', isInput: true}
   }
   return {item: task, isInput: false}
 }));
 
-const currentIndex = ref(0);
-const activeInput = ref(0);
+const currentIndex = ref<number>(0);
+const activeInput = ref<number>(0);
 const inputs = ref([]);
-const open = ref(false);
-const correct = ref(false);
+const openCheck = ref<boolean>(false);
+const openSolution = ref<boolean>(false);
+const correct = ref<boolean>(false);
+const correctResult = ref<string>(game.correctAnswer().task);
 
 onMounted(() => {
-  inputs.value[activeInput.value].focus();
-})
+  inputs.value[0].focus();
+});
 
 function setCurrentIndex(index: number) {
   currentIndex.value = index;
@@ -34,34 +36,44 @@ function setTask(digit) {
 }
 
 function nextInput() {
- if (activeInput.value > 0) {
-    activeInput.value -= 2;
-    console.log(activeInput.value)
- } else if (activeInput.value > formatted.value.length - 1) {
-   activeInput.value += 2;
-   console.log(activeInput.value)
- }
-
- inputs.value[activeInput.value].focus();
+  if (activeInput.value < formatted.value.length) {
+    activeInput.value += 2;
+  }
+  inputs.value[activeInput.value].focus();
 }
 
-provide('open', open);
+function prevInput() {
+  if (activeInput.value < 2) return
+  activeInput.value -= 2;
+
+  inputs.value[activeInput.value].focus();
+}
+
+provide('openCheck', openCheck);
+provide('openSolution', openSolution);
 provide('correct', correct);
+provide('formatted', formatted);
+provide('result', formattedTask);
+provide('correctResult', correctResult);
 
 </script>
 
 <template>
   <main>
-    <Popup />
+    <PopupCheck/>
+    <PopupSolution/>
     <div class="header">
-     <RouterLink to="/"><button class="cancel" @click="game.timer.stopTimer"><img src="/icons/cancel.svg" alt="" >Отмена</button></RouterLink>
+      <RouterLink to="/">
+        <button class="cancel" @click="game.timer.stopTimer(); game.updateHistory()"><img src="/icons/cancel.svg" alt="">Отмена</button>
+      </RouterLink>
       <Timer/>
     </div>
     <div class="example">
       <p class="container_task" v-for="(task, index) of formatted" :key="index">
-        <input :ref="el => inputs[index] = el" v-if="task.isInput" type="number" class="hidden" :value="task.item" @focus="setCurrentIndex(index)" @input="task.item = $event.target.value">
+        <input :ref="el => inputs[index] = el" v-if="task.isInput" type="number" class="hidden" :value="task.item"
+               @focus="setCurrentIndex(index)" @input="task.item = $event.target.value">
         <p v-else>
-          {{task.item}}
+          {{ task.item }}
         </p>
       </p>
     </div>
@@ -75,10 +87,12 @@ provide('correct', correct);
         <button class="number" @click="setTask(0)">0</button>
       </div>
       <div class="actions_users">
-        <button class="action"><img src="/icons/arrow_back.svg" @click="nextInput" alt=""></button>
-        <button class="action"><img src="/icons/arrow_forward.svg" @click="nextInput" alt=""></button>
-        <button class="action"> ? </button>
-        <button class="action" @click="correct = game.checkAnswer(formatted.map(item => item.item).join(' ')); open = true"> =</button>
+        <button class="action" @click="prevInput"><img src="/icons/arrow_back.svg" alt=""></button>
+        <button class="action" @click="nextInput"><img src="/icons/arrow_forward.svg" alt=""></button>
+        <button class="action" @click="openSolution = true"> ?</button>
+        <button class="action"
+                @click="correct = game.checkAnswer(formatted.map(item => item.item).join(' ')); openCheck = true"> =
+        </button>
       </div>
     </div>
   </main>
@@ -90,6 +104,7 @@ img {
 }
 
 main {
+  margin-top: 30px;
   width: 400px;
 }
 

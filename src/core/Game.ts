@@ -1,6 +1,6 @@
-import {GameEngine} from "@/stores/GameEngine";
-import {GameHistory} from "@/stores/GameHistory";
-import {Timer} from "@/stores/Timer";
+import {GameEngine} from "@/core/GameEngine";
+import {GameHistory} from "@/core/GameHistory";
+import {Timer} from "@/core/Timer";
 import type {TaskInterface} from "@/interface/TaskInterface";
 import type {SettingInterface} from "@/interface/SettingInterface";
 
@@ -10,6 +10,7 @@ export class Game {
     private engine = {};
     private history = new GameHistory();
     private timer = {};
+    formattedTask: TaskInterface | {} = {};
     tasks: TaskInterface[] = [
         {
             task: '8 + 2 - 5 * 2',
@@ -67,8 +68,10 @@ export class Game {
             operation: ['-']
         }
     ];
-    decidedTasks: TaskInterface[] = [];
-    formattedTask: TaskInterface | {} = {};
+    decidedSuccessfullyTasks: number = 0;
+    decidedTasks: number = 0;
+    presentDay: string = '';
+    
     static startGame(settings: SettingInterface) {
         this.currentGame = new Game(settings);
     }
@@ -81,16 +84,61 @@ export class Game {
 
     getTask() {
         this.formattedTask = this.engine.createTask(this.tasks);
+        return this.formattedTask;
     };
+
+    getDayNow() {
+        const date = new Date();
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+
+        this.presentDay = `${day}.${month}`;
+
+        this.history.setNewDay(this.presentDay);
+        this.history.setDay(this.history.callingDays[this.presentDay]);
+    }
 
     correctAnswer() {
         return this.engine.currentTask;
     }
 
     getAccuracy() {
+
     };
 
     checkAnswer(solution: string) {
-        return this.engine.checkAnswer(solution, this.decidedTasks);
+        const answer = this.engine.checkAnswer(solution, this.decidedSuccessfullyTasks, this.decidedTasks);
+
+        if (answer) {
+            this.decidedSuccessfullyTasks++;
+            this.decidedTasks++;
+
+            return answer;
+        }
+        this.decidedTasks++;
+
+        return answer;
     };
+
+    updateHistory() {
+        const days = this.history.callingDays;
+        const currentDay = days[this.presentDay];
+
+        if (currentDay.length !== 0) {
+            currentDay[0] += this.decidedSuccessfullyTasks;
+            currentDay[1] += this.decidedTasks;
+
+            this.history.setDate(days);
+            this.history.setDay(currentDay);
+            this.history.calculatePercent(this.presentDay);
+            return
+        }
+
+        currentDay.push(this.decidedSuccessfullyTasks);
+        currentDay.push(this.decidedTasks);
+
+        this.history.setDate(days);
+        this.history.setDay(currentDay);
+        this.history.calculatePercent(this.presentDay);
+    }
 }

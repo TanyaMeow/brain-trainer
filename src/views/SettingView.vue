@@ -1,22 +1,37 @@
 <script setup lang="ts">
+
 import GameSettings from "@/components/GameSettings.vue";
 import {provide, ref} from "vue";
 import {Setting, SettingInterface, GameSetting} from "@/core/GameSettings";
 import router from "@/router";
 import {Game} from "@/core/Game";
+import type {TaskInterface} from "@/interface/TaskInterface";
+
+const daysLocalStorage = JSON.parse(localStorage.getItem('days'));
+const day = JSON.parse(localStorage.getItem('day'));
 
 const settingState = ref<SettingInterface>({
-  duration: 0,
-  complex: 0,
+  duration: 1,
+  complex: 1,
   summing: false,
   difference: false,
   multi: false,
   division: false,
   expo: false
 });
+const days = ref<number>(1);
+const decideSuccessful = ref<number>(0);
+const decide = ref<number>(0);
+const accuracy = ref<number>(0);
 
 if (localStorage.getItem('settings')) {
   settingState.value = JSON.parse(localStorage.getItem('settings'));
+}
+if (daysLocalStorage) {
+  days.value = Object.keys(daysLocalStorage).length;
+  decideSuccessful.value = day[0];
+  decide.value = day[1];
+  accuracy.value = JSON.parse(localStorage.getItem('percent'));
 }
 
 provide('settingState', settingState.value);
@@ -38,9 +53,9 @@ function startGame() {
   <div class="setting">
     <h1 class="greeting">Привет!</h1>
     <div class="result">
-      <p>Добро пожаловать на 24 тренировочный день,</p>
-      <p>Ваш последний результат - решено 10 из 25.</p>
-      <p>Общая точность 80%.</p>
+      <p>Добро пожаловать на {{ days }} тренировочный день,</p>
+      <p>Ваш последний результат - решено {{ decideSuccessful }} из {{ decide }}.</p>
+      <p>Общая точность {{ accuracy }}%.</p>
     </div>
     <GameSettings />
     <button class="go" @click="startGame">Начать!</button>
@@ -50,6 +65,7 @@ function startGame() {
 <style scoped>
 
 .setting {
+  margin-top: 30px;
   width: 400px;
 }
 
