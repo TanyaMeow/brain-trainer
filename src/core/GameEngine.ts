@@ -12,16 +12,10 @@ enum Operation {
 }
 
 export class GameEngine {
-    // FIXME исправь типизацию (DONE)
-    // FIXME
     private math: MathJsInstance = create(all, {});
-    // FIXME remove (DONE)
 
     constructor(private settings: SettingInterface) {}
-        // FIXME если в конструкторе прописать модификатор доступа, то присвоение можно удалить
-        //  private settings: SettingInterface (DONE)
 
-    // FIXME private (DONE)
     private getRandomInt(min: number, max: number): number {
         min = Math.ceil(min);
         max = Math.floor(max);

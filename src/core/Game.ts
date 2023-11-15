@@ -7,11 +7,6 @@ import type {SettingInterface} from "@/interface/SettingInterface";
 export class Game {
     static currentGame: Game;
 
-    // FIXME объяви settings, engine, timer и history в конструкторе (DONE)
-    // FIXME пропиши типы, и без | {} - это аналогично any
-
-    // FIXME formattedTask?: TaskInterface (DONE)
-    // FIXME formattedTask - плохое название, переименуй (DONE)
     currentTask?: TaskInterface;
     decidedSuccessfullyTasks: number = 0;
     decidedTasks: number = 0;
@@ -27,7 +22,6 @@ export class Game {
         private history: GameHistory,
         private timer: Timer
     ) {}
-        // FIXME никаких присвоений и созданий new в конструкторе не должно быть, все создания экземпляров вынеси в startGame (DONE)
 
     getTask(): TaskInterface {
         this.currentTask = this.engine.createTask();
@@ -48,8 +42,6 @@ export class Game {
     correctAnswer(): string {
         return <string>this.currentTask?.task;
     }
-
-    // FIXME удали, код не используется (DONE)
 
     checkAnswer(solution: string): boolean {
         const answer = this.engine.checkAnswer(solution, this.currentTask);
