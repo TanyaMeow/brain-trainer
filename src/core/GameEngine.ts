@@ -11,14 +11,20 @@ enum Operation {
 }
 
 export class GameEngine {
+    // FIXME исправь типизацию
+    // FIXME
     private currentTask: TaskInterface | {} = {};
     private math = create(all, {});
+    // FIXME remove
     settings = {};
 
     constructor(settings: SettingInterface) {
+        // FIXME если в конструкторе прописать модификатор доступа, то присвоение можно удалить
+        //  private settings: SettingInterface
         this.settings = settings;
     }
 
+    // FIXME private
     getRandomInt(min: number, max: number) {
         min = Math.ceil(min);
         max = Math.floor(max);

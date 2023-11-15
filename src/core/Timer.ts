@@ -2,6 +2,7 @@ export class Timer {
     minute: number = 0;
     second: string | number = 0;
     timer;
+    // FIXME таймер не должен знат об игре ничего. Он может знать, что закончилось время, но не в игре, а в таймере
     gameOver: boolean = false;
 
     constructor(time: number) {

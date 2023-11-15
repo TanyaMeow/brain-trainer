@@ -6,6 +6,8 @@ import {Setting, SettingInterface, GameSetting} from "@/core/GameSettings";
 import router from "@/router";
 import {Game} from "@/core/Game";
 
+// FIXME присвой сразу значение {} если в localStorage пусто
+// FIXME переименуй константу, нам нет разницы откуда она получена. Важно то, что в ней хранится
 const daysLocalStorage = JSON.parse(localStorage.getItem('days'));
 const day = JSON.parse(localStorage.getItem('day'));
 
@@ -18,11 +20,14 @@ const settingState = ref<SettingInterface>({
   division: false,
   expo: false
 });
+// FIXME эта переменная не нужна можно использовать daysLocalStorage.length
+// FIXME переменные ниже тоже не нужны, достаточно вынести в константу lastDay и использовать lastDay[0] и lastDay[1]
 const days = ref<number>(1);
 const decideSuccessful = ref<number>(0);
 const decide = ref<number>(0);
 const accuracy = ref<number>(0);
 
+// FIXME достань настройки выше и если они есть положи их сразу в settingState иначе дефолтные значения
 if (localStorage.getItem('settings')) {
   settingState.value = JSON.parse(localStorage.getItem('settings'));
 }

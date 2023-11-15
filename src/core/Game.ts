@@ -6,10 +6,14 @@ import type {SettingInterface} from "@/interface/SettingInterface";
 
 export class Game {
     static currentGame;
+    // FIXME объяви settings, engine, timer и history в конструкторе
+    // FIXME пропиши типы, и без | {} - это аналогично any
     private settings: SettingInterface | {} = {};
     private engine = {};
     private history = new GameHistory();
     private timer = {};
+    // FIXME formattedTask?: TaskInterface
+    // FIXME formattedTask - плохое название, переименуй
     formattedTask: TaskInterface | {} = {};
     decidedSuccessfullyTasks: number = 0;
     decidedTasks: number = 0;
@@ -20,6 +24,7 @@ export class Game {
     }
 
     constructor(settings: SettingInterface | {}) {
+        // FIXME никаких присвоений и созданий new в конструкторе не должно быть, все создания экземпляров вынеси в startGame
         this.engine = new GameEngine(settings)
         this.timer = new Timer(settings.duration);
         this.settings = settings;
@@ -45,6 +50,7 @@ export class Game {
         return this.engine.currentTask;
     }
 
+    // FIXME удали, код не используется
     getAccuracy() {
 
     };
