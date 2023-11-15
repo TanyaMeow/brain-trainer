@@ -1,6 +1,16 @@
 import type {SettingInterface} from "@/interface/SettingInterface";
 
 export class Setting implements SettingInterface{
+    static initialState: SettingInterface = {
+        duration: 1,
+        complex: 1,
+        summing: false,
+        difference: false,
+        multi: false,
+        division: false,
+        expo: false
+    }
+
     duration: number;
     complex: number;
     summing: boolean;

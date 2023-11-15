@@ -94,9 +94,9 @@ provide('stopGame', stopGame);
         <button class="number" @click="setTask(0)" @mousedown="(e) => e.preventDefault()">0</button>
       </div>
       <div class="actions_users">
-        <button class="action" @click="prevInput"><img src="/icons/arrow_back.svg" alt=""></button>
-        <button class="action" @click="nextInput"><img src="/icons/arrow_forward.svg" alt=""></button>
-        <button class="action" @click="openSolution = true"> ?</button>
+        <button class="action" @click="prevInput" @mousedown="(e) => e.preventDefault()"><img src="/icons/arrow_back.svg" alt=""></button>
+        <button class="action" @click="nextInput" @mousedown="(e) => e.preventDefault()"><img src="/icons/arrow_forward.svg" alt=""></button>
+        <button class="action" @mousedown="(e) => e.preventDefault()" @click="openSolution = true"> ?</button>
         <button class="action"
                 @click="correct = game.checkAnswer(formatted.map(item => item.item).join(' ')); openCheck = true"> =
         </button>

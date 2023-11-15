@@ -2,30 +2,26 @@
 
 import GameSettings from "@/components/GameSettings.vue";
 import {provide, ref} from "vue";
-import {Setting, SettingInterface, GameSetting} from "@/core/GameSettings";
+import {Setting} from "@/core/GameSettings";
+import type {SettingInterface} from "@/interface/SettingInterface";
 import router from "@/router";
 import {Game} from "@/core/Game";
 
-const allDays = (localStorage.getItem('days')) ? JSON.parse(localStorage.getItem('days')) : {};
-const lastDay = JSON.parse(localStorage.getItem('lastDay'));
+const allDays = (localStorage.getItem('days')) ? JSON.parse(localStorage.getItem('days')  || '{}') : {};
+const lastDay = JSON.parse(localStorage.getItem('lastDay')  || '[0, 0]');
 
-// FIXME исправь ошибку ts
+// FIXME исправь ошибку ts (DONE)
 const settingState = ref<SettingInterface>((localStorage.getItem('settings'))
-    // FIXME тут тип any
-    ? JSON.parse(localStorage.getItem('settings'))
-    // FIXME вынеси дефолтные значения в static поле initialState класса GameSettings
-    : { duration: 1, complex: 1, summing: false, difference: false, multi: false, division: false, expo: false });
+    // FIXME тут тип any (DONE)
+    ? JSON.parse(localStorage.getItem('settings') || String(Setting.initialState))
+    // FIXME вынеси дефолтные значения в static поле initialState класса GameSettings (DONE)
+    : Setting.initialState);
 
-// FIXME daysCount
-// FIXME Object.keys(allDays).length || 1
-const days = ref<number>(1);
-// FIXME JSON.parse(localStorage.getItem('percent')) || 0
-const accuracy = ref<number>(0);
-
-if (allDays) {
-  days.value = Object.keys(allDays).length;
-  accuracy.value = JSON.parse(localStorage.getItem('percent'));
-}
+// FIXME daysCount (DONE)
+// FIXME Object.keys(allDays).length || 1 (DONE)
+const days = ref<number>(Object.keys(allDays).length || 1);
+// FIXME JSON.parse(localStorage.getItem('percent')) || 0 (DONE)
+const accuracy = ref<number>(JSON.parse(localStorage.getItem('percent') || '0') || 0);
 
 provide('settingState', settingState.value);
 
