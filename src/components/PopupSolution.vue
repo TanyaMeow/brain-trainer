@@ -3,8 +3,8 @@
 import {computed, inject, ref} from "vue";
 import {Game} from "@/core/Game";
 
-const openSolution = inject('openSolution');
-let correctResult = inject('correctResult');
+const openSolution = inject<boolean>('openSolution');
+let correctResult = inject<string>('correctResult');
 
 </script>
 
@@ -23,10 +23,6 @@ let correctResult = inject('correctResult');
 </template>
 
 <style scoped>
-
-.title {
-  font-size: 24px;
-}
 
 .block_popup {
   position: absolute;

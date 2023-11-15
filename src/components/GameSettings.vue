@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {inject} from "vue";
+import type {SettingInterface} from "@/interface/SettingInterface";
 
-let setting = inject('settingState');
+let setting = inject<SettingInterface>('settingState');
 
 </script>
 

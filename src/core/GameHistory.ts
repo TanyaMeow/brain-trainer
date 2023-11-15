@@ -2,7 +2,7 @@ export class GameHistory {
     callingDays = this.getDate();
     dayPercent: number = this.getPercent();
 
-    setNewDay(date: string) {
+    setNewDay(date: string): void {
         if (date in this.callingDays) {
             return;
         }
@@ -25,15 +25,15 @@ export class GameHistory {
         return (localStorage.getItem('percent') === null) ? 0 : JSON.parse(localStorage.getItem('percent') as string);
     }
 
-    setDate(date: {}) {
+    setDate(date: {}): void {
         localStorage.setItem('days', JSON.stringify(date));
     }
 
-    setDay(day: number[]) {
-        localStorage.setItem('day', JSON.stringify(day));
+    setLastDay(day: number[]): void {
+        localStorage.setItem('lastDay', JSON.stringify(day));
     }
 
-    setPercent(percent: number) {
+    setPercent(percent: number): void {
         localStorage.setItem('percent', JSON.stringify(percent));
     }
 }

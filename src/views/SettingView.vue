@@ -6,35 +6,24 @@ import {Setting, SettingInterface, GameSetting} from "@/core/GameSettings";
 import router from "@/router";
 import {Game} from "@/core/Game";
 
-// FIXME присвой сразу значение {} если в localStorage пусто
-// FIXME переименуй константу, нам нет разницы откуда она получена. Важно то, что в ней хранится
-const daysLocalStorage = JSON.parse(localStorage.getItem('days'));
-const day = JSON.parse(localStorage.getItem('day'));
+// FIXME присвой сразу значение {} если в localStorage пусто (DONE)
+// FIXME переименуй константу, нам нет разницы откуда она получена. Важно то, что в ней хранится (DONE)
+const allDays = (localStorage.getItem('days')) ? JSON.parse(localStorage.getItem('days')) : {};
+const lastDay = JSON.parse(localStorage.getItem('lastDay'));
 
-const settingState = ref<SettingInterface>({
-  duration: 1,
-  complex: 1,
-  summing: false,
-  difference: false,
-  multi: false,
-  division: false,
-  expo: false
-});
-// FIXME эта переменная не нужна можно использовать daysLocalStorage.length
-// FIXME переменные ниже тоже не нужны, достаточно вынести в константу lastDay и использовать lastDay[0] и lastDay[1]
+const settingState = ref<SettingInterface>((localStorage.getItem('settings'))
+    ? JSON.parse(localStorage.getItem('settings'))
+    : { duration: 1, complex: 1, summing: false, difference: false, multi: false, division: false, expo: false });
+
+// FIXME эта переменная не нужна можно использовать daysLocalStorage.length (DONE)
+// FIXME переменные ниже тоже не нужны, достаточно вынести в константу lastDay и использовать lastDay[0] и lastDay[1] (DONE)
 const days = ref<number>(1);
-const decideSuccessful = ref<number>(0);
-const decide = ref<number>(0);
 const accuracy = ref<number>(0);
 
-// FIXME достань настройки выше и если они есть положи их сразу в settingState иначе дефолтные значения
-if (localStorage.getItem('settings')) {
-  settingState.value = JSON.parse(localStorage.getItem('settings'));
-}
-if (daysLocalStorage) {
-  days.value = Object.keys(daysLocalStorage).length;
-  decideSuccessful.value = day[0];
-  decide.value = day[1];
+// FIXME достань настройки выше и если они есть положи их сразу в settingState иначе дефолтные значения (DONE)
+
+if (allDays) {
+  days.value = Object.keys(allDays).length;
   accuracy.value = JSON.parse(localStorage.getItem('percent'));
 }
 
@@ -58,7 +47,7 @@ function startGame() {
     <h1 class="greeting">Привет!</h1>
     <div class="result">
       <p>Добро пожаловать на {{ days }} тренировочный день,</p>
-      <p>Ваш последний результат - решено {{ decideSuccessful }} из {{ decide }}.</p>
+      <p>Ваш последний результат - решено {{ lastDay[0] }} из {{ lastDay[1] }}.</p>
       <p>Общая точность {{ accuracy }}%.</p>
     </div>
     <GameSettings />

@@ -5,37 +5,36 @@ import type {TaskInterface} from "@/interface/TaskInterface";
 import type {SettingInterface} from "@/interface/SettingInterface";
 
 export class Game {
-    static currentGame;
-    // FIXME объяви settings, engine, timer и history в конструкторе
+    static currentGame: Game;
+
+    // FIXME объяви settings, engine, timer и history в конструкторе (DONE)
     // FIXME пропиши типы, и без | {} - это аналогично any
-    private settings: SettingInterface | {} = {};
-    private engine = {};
-    private history = new GameHistory();
-    private timer = {};
-    // FIXME formattedTask?: TaskInterface
-    // FIXME formattedTask - плохое название, переименуй
-    formattedTask: TaskInterface | {} = {};
+
+    // FIXME formattedTask?: TaskInterface (DONE)
+    // FIXME formattedTask - плохое название, переименуй (DONE)
+    currentTask?: TaskInterface;
     decidedSuccessfullyTasks: number = 0;
     decidedTasks: number = 0;
     presentDay: string = '';
     
-    static startGame(settings: SettingInterface) {
-        this.currentGame = new Game(settings);
+    static startGame(settings: SettingInterface): void {
+        this.currentGame = new Game(settings, new GameEngine(settings), new GameHistory(), new Timer(settings.duration));
     }
 
-    constructor(settings: SettingInterface | {}) {
-        // FIXME никаких присвоений и созданий new в конструкторе не должно быть, все создания экземпляров вынеси в startGame
-        this.engine = new GameEngine(settings)
-        this.timer = new Timer(settings.duration);
-        this.settings = settings;
-    }
+    constructor(
+        private settings: SettingInterface,
+        private engine: GameEngine,
+        private history: GameHistory,
+        private timer: Timer
+    ) {}
+        // FIXME никаких присвоений и созданий new в конструкторе не должно быть, все создания экземпляров вынеси в startGame (DONE)
 
-    getTask() {
-        this.formattedTask = this.engine.createTask();
-        return this.formattedTask;
+    getTask(): TaskInterface {
+        this.currentTask = this.engine.createTask();
+        return this.currentTask;
     };
 
-    getDayNow() {
+    getDayNow(): void {
         const date = new Date();
         const day = date.getDate();
         const month = date.getMonth() + 1;
@@ -43,20 +42,17 @@ export class Game {
         this.presentDay = `${day}.${month}`;
 
         this.history.setNewDay(this.presentDay);
-        this.history.setDay(this.history.callingDays[this.presentDay]);
+        this.history.setLastDay(this.history.callingDays[this.presentDay]);
     }
 
-    correctAnswer() {
-        return this.engine.currentTask;
+    correctAnswer(): string {
+        return <string>this.currentTask?.task;
     }
 
-    // FIXME удали, код не используется
-    getAccuracy() {
+    // FIXME удали, код не используется (DONE)
 
-    };
-
-    checkAnswer(solution: string) {
-        const answer = this.engine.checkAnswer(solution, this.decidedSuccessfullyTasks, this.decidedTasks);
+    checkAnswer(solution: string): boolean {
+        const answer = this.engine.checkAnswer(solution, this.currentTask);
 
         if (answer) {
             this.decidedSuccessfullyTasks++;
@@ -69,7 +65,7 @@ export class Game {
         return answer;
     };
 
-    updateHistory() {
+    updateHistory(): void {
         const days = this.history.callingDays;
         const currentDay = days[this.presentDay];
 
@@ -78,7 +74,7 @@ export class Game {
             currentDay[1] += this.decidedTasks;
 
             this.history.setDate(days);
-            this.history.setDay(currentDay);
+            this.history.setLastDay(currentDay);
             this.history.calculatePercent(this.presentDay);
             return
         }
@@ -87,7 +83,11 @@ export class Game {
         currentDay.push(this.decidedTasks);
 
         this.history.setDate(days);
-        this.history.setDay(currentDay);
+        this.history.setLastDay(currentDay);
         this.history.calculatePercent(this.presentDay);
+    }
+
+    stopGame(): void {
+        this.timer.stopTimer();
     }
 }

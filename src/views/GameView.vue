@@ -1,14 +1,15 @@
 <script setup lang="ts">
+
 import Timer from "@/components/Timer.vue";
-import {computed, onMounted, provide, ref} from "vue";
+import {onMounted, provide, ref} from "vue";
 import {Game} from "@/core/Game";
 import PopupCheck from "@/components/PopupCheck.vue";
 import PopupSolution from "@/components/PopupSolution.vue";
 
 const game = Game.currentGame;
 
-const formattedTask = ref(game.formattedTask);
-const formatted = ref(formattedTask.value.task.split(' ').map((task) => {
+const currentTask = ref(game.currentTask);
+const formatted = ref(currentTask.value?.formatted.split(' ').map((task) => {
   if (task === '_') {
     return {item: '', isInput: true}
   }
@@ -21,7 +22,7 @@ const inputs = ref([]);
 const openCheck = ref<boolean>(false);
 const openSolution = ref<boolean>(false);
 const correct = ref<boolean>(false);
-const correctResult = ref<string>(game.correctAnswer().task);
+const correctResult = ref<string>(game.correctAnswer());
 
 onMounted(() => {
   inputs.value[0].focus();
@@ -31,7 +32,7 @@ function setCurrentIndex(index: number) {
   currentIndex.value = index;
 }
 
-function setTask(digit) {
+function setTask(digit: number) {
   formatted.value[currentIndex.value].item += String(digit);
 }
 
@@ -49,12 +50,18 @@ function prevInput() {
   inputs.value[activeInput.value].focus();
 }
 
+function stopGame() {
+  game.stopGame();
+  game.updateHistory();
+}
+
 provide('openCheck', openCheck);
 provide('openSolution', openSolution);
 provide('correct', correct);
 provide('formatted', formatted);
-provide('result', formattedTask);
+provide('result', currentTask);
 provide('correctResult', correctResult);
+provide('stopGame', stopGame);
 
 </script>
 
@@ -64,7 +71,7 @@ provide('correctResult', correctResult);
     <PopupSolution/>
     <div class="header">
       <RouterLink to="/">
-        <button class="cancel" @click="game.timer.stopTimer(); game.updateHistory()"><img src="/icons/cancel.svg" alt="">Отмена</button>
+        <button class="cancel" @click="stopGame"><img src="/icons/cancel.svg" alt="">Отмена</button>
       </RouterLink>
       <Timer/>
     </div>
@@ -78,13 +85,13 @@ provide('correctResult', correctResult);
       </p>
     </div>
     <div class="result">
-      <p class="correct_result">= {{ formattedTask.result }} ?</p>
+      <p class="correct_result">= {{ currentTask.result }} ?</p>
     </div>
     <div class="actions">
       <div class="actions_number">
-        <button class="number" v-for="num of 9" @click="setTask(num)">{{ num }}</button>
+        <button class="number" v-for="num of 9" @click="setTask(num)" @mousedown="(e) => e.preventDefault()">{{ num }}</button>
         <div></div>
-        <button class="number" @click="setTask(0)">0</button>
+        <button class="number" @click="setTask(0)" @mousedown="(e) => e.preventDefault()">0</button>
       </div>
       <div class="actions_users">
         <button class="action" @click="prevInput"><img src="/icons/arrow_back.svg" alt=""></button>

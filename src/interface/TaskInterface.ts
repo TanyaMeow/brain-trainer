@@ -1,4 +1,5 @@
 export interface TaskInterface {
     task: string,
-    result: number
+    result: number,
+    formatted: string
 }

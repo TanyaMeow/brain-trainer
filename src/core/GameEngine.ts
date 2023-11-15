@@ -1,4 +1,5 @@
 import {all, create} from "mathjs";
+import type {MathJsInstance} from "mathjs";
 import type {TaskInterface} from "@/interface/TaskInterface";
 import type {SettingInterface} from "@/interface/SettingInterface";
 
@@ -11,28 +12,24 @@ enum Operation {
 }
 
 export class GameEngine {
-    // FIXME исправь типизацию
+    // FIXME исправь типизацию (DONE)
     // FIXME
-    private currentTask: TaskInterface | {} = {};
-    private math = create(all, {});
-    // FIXME remove
-    settings = {};
+    private math: MathJsInstance = create(all, {});
+    // FIXME remove (DONE)
 
-    constructor(settings: SettingInterface) {
+    constructor(private settings: SettingInterface) {}
         // FIXME если в конструкторе прописать модификатор доступа, то присвоение можно удалить
-        //  private settings: SettingInterface
-        this.settings = settings;
-    }
+        //  private settings: SettingInterface (DONE)
 
-    // FIXME private
-    getRandomInt(min: number, max: number) {
+    // FIXME private (DONE)
+    private getRandomInt(min: number, max: number): number {
         min = Math.ceil(min);
         max = Math.floor(max);
 
         return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    createTask() {
+    createTask(): TaskInterface {
         const operation: string[] = [];
 
         if (this.settings.summing) {
@@ -51,14 +48,14 @@ export class GameEngine {
             operation.push(Operation.EXPO);
         }
 
-        let task = '';
+        let task: string = '';
 
         for (let i = 0; i < this.settings.complex; i++) {
-            const leftOperand = String(this.getRandomInt(1, 100));
-            const random = Math.floor(Math.random() * operation.length);
-            const operator = operation[random];
+            const leftOperand: string = String(this.getRandomInt(1, 100));
+            const random: number = Math.floor(Math.random() * operation.length);
+            const operator: string = operation[random];
 
-            let expression = leftOperand + ' ' + operator + ' ';
+            let expression: string = leftOperand + ' ' + operator + ' ';
 
             if (i === this.settings.complex - 1) {
                 expression = leftOperand;
@@ -67,39 +64,32 @@ export class GameEngine {
             task += expression;
         }
 
-        const result = Math.floor(this.math.evaluate(task));
+        const result: number = Math.floor(this.math.evaluate(task));
 
-        this.currentTask = {task: task, result: result};
-        return this.setComplex();
+        return {task: task, result: result, formatted: this.setComplex(task)};
     };
 
-    setComplex() {
-        const operators = [
+    setComplex(expression: string): string {
+        const operators: Operation[] = [
             Operation.SUMMING,
             Operation.MULTI,
             Operation.DIFFERENCE,
             Operation.DIVISION,
             Operation.EXPO
         ];
-        const task = this.currentTask.task.split(' ').map((oper) => {
-            if(!operators.includes(oper)) {
+        return expression.split(' ').map((oper: string): string => {
+            if (!operators.includes(<Operation>oper)) {
                 return '_';
             }
 
             return oper;
         }).join(' ');
-
-        return {task: task, result: this.currentTask.result};
     }
 
-    checkAnswer(solution: string) {
+    checkAnswer(solution: string, currentTask: TaskInterface | undefined): boolean {
         solution = solution.replace(' ** ', '^');
-        const answer = Math.floor(this.math.evaluate(solution));
+        const answer: number = Math.floor(this.math.evaluate(solution));
 
-        return answer === this.currentTask.result;
-    };
-
-    giveMeAChance() {
-        return this.currentTask.task;
+        return answer === currentTask?.result;
     };
 }

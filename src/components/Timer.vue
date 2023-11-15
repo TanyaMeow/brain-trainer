@@ -6,16 +6,15 @@ import router from "@/router";
 
 const game = Game.currentGame;
 
-const minute = ref(0);
-const second = ref(0);
+const minute = ref<number>(0);
+const second = ref<number | string>(0);
 
 onMounted(() => {
   const timer = setInterval(() => {
     minute.value = game.timer.minute;
     second.value = game.timer.second;
 
-    if (game.timer.gameOver) {
-      game.timer.stopTimer();
+    if (game.timer.isFinished) {
       clearInterval(timer);
       game.updateHistory();
       router.push({path: '/'});
