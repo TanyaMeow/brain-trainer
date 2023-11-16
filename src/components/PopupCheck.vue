@@ -1,18 +1,19 @@
 <script setup lang="ts">
 
-import {computed, inject, ref} from "vue";
+import {inject} from "vue";
 import {Game} from "@/core/Game";
 import type {TaskInterface} from "@/interface/TaskInterface";
 import type {FormattedInterface} from "@/interface/FormattedInterface";
+import type {Ref} from "vue";
 
 const game = Game.currentGame;
 
 const openCheck = inject<boolean>('openCheck');
 const correct = inject<boolean>('correct');
-let formatted = inject<FormattedInterface>('formatted');
-let result = inject<TaskInterface>('result');
-let correctResult = inject<string>('correctResult');
-const stopGame = inject('stopGame');
+let formatted = inject('formatted') as Ref<FormattedInterface[]>;
+let result = inject('result') as Ref<TaskInterface>;
+let correctResult = inject('correctResult') as Ref<string>;
+const stopGame = inject<() => {}>('stopGame');
 
 function nextTask() {
   const currentTask = game.getTask();
