@@ -13,22 +13,21 @@ export class Game {
     presentDay: string = '';
     
     static startGame(settings: SettingInterface): void {
-        this.currentGame = new Game(settings, new GameEngine(settings), new GameHistory(), new Timer(settings.duration));
+        this.currentGame = new Game(new GameEngine(settings), new GameHistory(), new Timer(settings.duration));
     }
 
     constructor(
-        private settings: SettingInterface,
         private engine: GameEngine,
         private history: GameHistory,
         private timer: Timer
     ) {}
 
-    getTask(): TaskInterface {
+    public getTask(): TaskInterface {
         this.currentTask = this.engine.createTask();
         return this.currentTask;
     };
 
-    getDayNow(): void {
+    public getDayNow(): void {
         const date = new Date();
         const day = date.getDate();
         const month = date.getMonth() + 1;
@@ -39,11 +38,15 @@ export class Game {
         this.history.setLastDay(this.history.callingDays[this.presentDay]);
     }
 
-    correctAnswer(): string {
+    public correctAnswer(): string {
         return <string>this.currentTask?.task;
     }
 
-    checkAnswer(solution: string): boolean {
+    public checkAnswer(solution: string): boolean {
+        if (!this.currentTask) {
+            return false;
+        }
+
         const answer = this.engine.checkAnswer(solution, this.currentTask);
 
         if (answer) {
@@ -57,7 +60,7 @@ export class Game {
         return answer;
     };
 
-    updateHistory(): void {
+    public updateHistory(): void {
         const days = this.history.callingDays;
         const currentDay = days[this.presentDay];
 
@@ -79,7 +82,7 @@ export class Game {
         this.history.calculatePercent(this.presentDay);
     }
 
-    stopGame(): void {
+    public stopGame(): void {
         this.timer.stopTimer();
     }
 }

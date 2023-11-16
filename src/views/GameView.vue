@@ -5,11 +5,13 @@ import {onMounted, provide, ref} from "vue";
 import {Game} from "@/core/Game";
 import PopupCheck from "@/components/PopupCheck.vue";
 import PopupSolution from "@/components/PopupSolution.vue";
+import type {TaskInterface} from "@/interface/TaskInterface";
+import type {FormattedInterface} from "@/interface/FormattedInterface";
 
-const game = Game.currentGame;
+const game: Game = Game.currentGame;
 
-const currentTask = ref(game.currentTask);
-const formatted = ref(currentTask.value?.formatted.split(' ').map((task) => {
+const currentTask = ref<TaskInterface>(game.currentTask);
+const formatted = ref<FormattedInterface[]>(currentTask.value?.formatted.split(' ').map((task: string) => {
   if (task === '_') {
     return {item: '', isInput: true}
   }
@@ -18,7 +20,7 @@ const formatted = ref(currentTask.value?.formatted.split(' ').map((task) => {
 
 const currentIndex = ref<number>(0);
 const activeInput = ref<number>(0);
-const inputs = ref([]);
+const inputs = ref<HTMLInputElement[]>([]);
 const openCheck = ref<boolean>(false);
 const openSolution = ref<boolean>(false);
 const correct = ref<boolean>(false);
@@ -28,29 +30,29 @@ onMounted(() => {
   inputs.value[0].focus();
 });
 
-function setCurrentIndex(index: number) {
+function setCurrentIndex(index: number): void {
   currentIndex.value = index;
 }
 
-function setTask(digit: number) {
+function setTask(digit: number): void {
   formatted.value[currentIndex.value].item += String(digit);
 }
 
-function nextInput() {
+function nextInput(): void {
   if (activeInput.value < formatted.value.length) {
     activeInput.value += 2;
   }
   inputs.value[activeInput.value].focus();
 }
 
-function prevInput() {
+function prevInput(): void {
   if (activeInput.value < 2) return
   activeInput.value -= 2;
 
   inputs.value[activeInput.value].focus();
 }
 
-function stopGame() {
+function stopGame(): void {
   game.stopGame();
   game.updateHistory();
 }
@@ -98,7 +100,7 @@ provide('stopGame', stopGame);
         <button class="action" @click="nextInput" @mousedown="(e) => e.preventDefault()"><img src="/icons/arrow_forward.svg" alt=""></button>
         <button class="action" @mousedown="(e) => e.preventDefault()" @click="openSolution = true"> ?</button>
         <button class="action"
-                @click="correct = game.checkAnswer(formatted.map(item => item.item).join(' ')); openCheck = true"> =
+                @click="openCheck = true; correct = game.checkAnswer(formatted.map(item => item.item).join(' '))"> =
         </button>
       </div>
     </div>

@@ -7,21 +7,16 @@ import type {SettingInterface} from "@/interface/SettingInterface";
 import router from "@/router";
 import {Game} from "@/core/Game";
 
-const allDays = (localStorage.getItem('days')) ? JSON.parse(localStorage.getItem('days')  || '{}') : {};
-const lastDay = JSON.parse(localStorage.getItem('lastDay')  || '[0, 0]');
+const settingsData: string = localStorage.getItem('settings') || JSON.stringify(Setting.initialState);
+const accuracyData: string = localStorage.getItem('percent') || JSON.stringify(0);
 
-// FIXME исправь ошибку ts (DONE)
-const settingState = ref<SettingInterface>((localStorage.getItem('settings'))
-    // FIXME тут тип any (DONE)
-    ? JSON.parse(localStorage.getItem('settings') || String(Setting.initialState))
-    // FIXME вынеси дефолтные значения в static поле initialState класса GameSettings (DONE)
-    : Setting.initialState);
+const allDays: Record<string, [number, number]> = JSON.parse(localStorage.getItem('days')  || '{}');
+const lastDay: [number, number] = JSON.parse(localStorage.getItem('lastDay')  || '[0, 0]');
 
-// FIXME daysCount (DONE)
-// FIXME Object.keys(allDays).length || 1 (DONE)
+const settingState = ref<SettingInterface>(JSON.parse(settingsData));
+
 const days = ref<number>(Object.keys(allDays).length || 1);
-// FIXME JSON.parse(localStorage.getItem('percent')) || 0 (DONE)
-const accuracy = ref<number>(JSON.parse(localStorage.getItem('percent') || '0') || 0);
+const accuracy = ref<number>(JSON.parse(accuracyData));
 
 provide('settingState', settingState.value);
 

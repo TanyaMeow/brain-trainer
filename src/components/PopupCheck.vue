@@ -3,12 +3,13 @@
 import {computed, inject, ref} from "vue";
 import {Game} from "@/core/Game";
 import type {TaskInterface} from "@/interface/TaskInterface";
+import type {FormattedInterface} from "@/interface/FormattedInterface";
 
 const game = Game.currentGame;
 
 const openCheck = inject<boolean>('openCheck');
 const correct = inject<boolean>('correct');
-let formatted = inject<TaskInterface>('formatted');
+let formatted = inject<FormattedInterface>('formatted');
 let result = inject<TaskInterface>('result');
 let correctResult = inject<string>('correctResult');
 const stopGame = inject('stopGame');
