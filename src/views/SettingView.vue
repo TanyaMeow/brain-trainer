@@ -26,7 +26,6 @@ function startGame() {
   Game.startGame(setting);
 
   Game.currentGame.getDayNow();
-  Game.currentGame.getTask();
 
   router.push({path: '/game'});
 }

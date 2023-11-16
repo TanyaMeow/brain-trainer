@@ -7,7 +7,7 @@ import type {SettingInterface} from "@/interface/SettingInterface";
 export class Game {
     static currentGame: Game;
 
-    currentTask?: TaskInterface;
+    currentTask: TaskInterface;
     decidedSuccessfullyTasks: number = 0;
     decidedTasks: number = 0;
     presentDay: string = '';
@@ -19,8 +19,10 @@ export class Game {
     constructor(
         private engine: GameEngine,
         private history: GameHistory,
-        private timer: Timer
-    ) {}
+        private _timer: Timer
+    ) {
+        this.currentTask = this.engine.createTask();
+    }
 
     public getTask(): TaskInterface {
         this.currentTask = this.engine.createTask();
@@ -28,9 +30,9 @@ export class Game {
     };
 
     public getDayNow(): void {
-        const date = new Date();
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
+        const date: Date = new Date();
+        const day: number = date.getDate();
+        const month: number = date.getMonth() + 1;
 
         this.presentDay = `${day}.${month}`;
 
@@ -47,7 +49,7 @@ export class Game {
             return false;
         }
 
-        const answer = this.engine.checkAnswer(solution, this.currentTask);
+        const answer: boolean = this.engine.checkAnswer(solution, this.currentTask);
 
         if (answer) {
             this.decidedSuccessfullyTasks++;
@@ -83,6 +85,10 @@ export class Game {
     }
 
     public stopGame(): void {
-        this.timer.stopTimer();
+        this._timer.stopTimer();
+    }
+
+    public get timer(): Timer {
+        return this._timer;
     }
 }

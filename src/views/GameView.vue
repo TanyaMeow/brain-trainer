@@ -79,8 +79,8 @@ provide('stopGame', stopGame);
     </div>
     <div class="example">
       <p class="container_task" v-for="(task, index) of formatted" :key="index">
-        <input :ref="el => inputs[index] = el" v-if="task.isInput" type="number" class="hidden" :value="task.item"
-               @focus="setCurrentIndex(index)" @input="task.item = $event.target.value">
+        <input :ref="el => inputs[index] = el as HTMLInputElement" v-if="task.isInput" type="number" class="hidden" :value="task.item"
+               @focus="setCurrentIndex(index)" @input="task.item = ($event.target as HTMLInputElement).value">
         <p v-else>
           {{ task.item }}
         </p>

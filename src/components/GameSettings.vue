@@ -2,7 +2,7 @@
 import {inject} from "vue";
 import type {SettingInterface} from "@/interface/SettingInterface";
 
-let setting = inject<SettingInterface>('settingState');
+let setting = inject('settingState') as SettingInterface;
 
 </script>
 
