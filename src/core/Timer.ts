@@ -1,7 +1,7 @@
 export class Timer {
     minute: number = 0;
     second: string | number = 0;
-    timer: number;
+    timer;
     isFinished: boolean = false;
 
     constructor(time: number) {
