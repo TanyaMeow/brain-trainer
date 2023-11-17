@@ -68,9 +68,9 @@ provide('stopGame', stopGame);
 </script>
 
 <template>
+  <PopupCheck/>
+  <PopupSolution/>
   <main>
-    <PopupCheck/>
-    <PopupSolution/>
     <div class="header">
       <RouterLink to="/">
         <button class="cancel" @click="stopGame"><img src="/icons/cancel.svg" alt="">Отмена</button>
