@@ -117,6 +117,12 @@ main {
   width: 400px;
 }
 
+@media (max-width: 450px) {
+  main {
+    width: 350px;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;

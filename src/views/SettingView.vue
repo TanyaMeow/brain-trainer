@@ -52,6 +52,12 @@ function startGame() {
   width: 400px;
 }
 
+@media (max-width: 450px) {
+  .setting {
+    width: 350px;
+  }
+}
+
 .result {
   & p {
     margin: 0;
