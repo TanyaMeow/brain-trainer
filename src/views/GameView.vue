@@ -151,6 +151,7 @@ main {
   align-items: center;
   flex-direction: row;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .result {
@@ -183,6 +184,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 p {
   font-weight: 600;
+  margin: 4px;
 }
 
 .hidden:focus {
